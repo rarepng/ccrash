@@ -1,0 +1,32 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 4,
+    "minor": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "description": "minimum",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/dist/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CUDA_ARCH": "sm_120",
+        "CUDA_PATH": "C:/miasma/cuda"
+      }
+    },
+    {
+      "name": "clang",
+      "inherits": "base",
+      "displayName": "c(uda)lang",
+      "description": "GCC ABI and libraries are critical and cuda ofc",
+      "cacheVariables": { "CMAKE_C_COMPILER": "clang", "CMAKE_CXX_COMPILER": "clang++" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "realclang", "configurePreset": "clang", "configuration": "Debug" }
+  ]
+}

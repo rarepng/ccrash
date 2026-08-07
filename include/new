@@ -1,0 +1,9 @@
+#pragma once
+
+#pragma push_macro("__CUDACC__")
+#undef __CUDACC__
+
+// normal gcc
+#include_next <new>
+
+#pragma pop_macro("__CUDACC__")
