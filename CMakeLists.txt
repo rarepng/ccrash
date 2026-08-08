@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
-project(rview2 LANGUAGES CXX C)
+project(ccrash LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -74,28 +74,28 @@ endif()
 list(GET CUDART_DLL 0 CUDART_DLL_PATH)
 
 
-add_executable(rview2 ${OTHER_SOURCES} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+add_executable(ccrash ${OTHER_SOURCES} ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 
 include(CMakeLocal.txt OPTIONAL)
 
 
-target_link_directories(rview2 PRIVATE
+target_link_directories(ccrash PRIVATE
     "${CUDA_PATH}/lib/x64"
 
 )
 
-target_compile_definitions(rview2 PRIVATE
+target_compile_definitions(ccrash PRIVATE
     "_NV_RSQRT_SPECIFIER="
 )
 
 
-target_link_libraries(rview2
+target_link_libraries(ccrash
     PRIVATE
     # cudart
     "${CUDART_DLL_PATH}"
 )
 
-target_include_directories(rview2
+target_include_directories(ccrash
     BEFORE
     PUBLIC
         "${PROJECT_BINARY_DIR}/generated/include" # in bin just in case of cross compiling
@@ -104,7 +104,7 @@ target_include_directories(rview2
 )
 
 
-target_compile_options(rview2 PUBLIC
+target_compile_options(ccrash PUBLIC
 
     $<$<CXX_COMPILER_ID:Clang>:--target=x86_64-w64-windows-gnu> # and god is dead
     $<$<CXX_COMPILER_ID:Clang>:-resource-dir=${CLANG_RESOURCE_DIR}>
@@ -121,11 +121,11 @@ target_compile_options(rview2 PUBLIC
     "$<$<CONFIG:Debug>:-Wno-missing-field-initializers>"
 
 )
-target_link_options(rview2 PUBLIC
+target_link_options(ccrash PUBLIC
     "$<$<CONFIG:sanitize>:-static-libasan>"
     "$<$<CONFIG:sanitize>:-fsanitize=address>"
 )
-target_link_options(rview2 PRIVATE
+target_link_options(ccrash PRIVATE
     # no idea here..
     # "$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>,$<CONFIG:sanitize>>:-static>"
 
@@ -133,30 +133,30 @@ target_link_options(rview2 PRIVATE
     "-static-libgcc" "-static-libstdc++"
 )
 
-target_link_libraries(rview2 PRIVATE
+target_link_libraries(ccrash PRIVATE
     "${CUDART_DLL_PATH}"
     $<$<BOOL:${UNIX}>:c;pthread>
     $<$<BOOL:${WIN32}>:pthread;DbgHelp;winmm;iphlpapi>
 )
 
-add_custom_command(TARGET rview2 POST_BUILD
+add_custom_command(TARGET ccrash POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CUDART_DLL_PATH}"
-    "$<TARGET_FILE_DIR:rview2>"
+    "$<TARGET_FILE_DIR:ccrash>"
 )
 
 
-install(TARGETS rview2 RUNTIME DESTINATION $<CONFIG> CONFIGURATIONS Release Distribution BleedingEdge MinSizeRel)
+install(TARGETS ccrash RUNTIME DESTINATION $<CONFIG> CONFIGURATIONS Release Distribution BleedingEdge MinSizeRel)
 
 # if(WIN32)
-#     get_filename_component(RVIEW2_BIN_DIR "${CMAKE_CXX_COMPILER}" DIRECTORY)
+#     get_filename_component(ccrash_BIN_DIR "${CMAKE_CXX_COMPILER}" DIRECTORY)
 
 #     install(CODE "
-#         message(STATUS \"resolving dynamic libraries for $<TARGET_FILE_NAME:rview2>...\")
+#         message(STATUS \"resolving dynamic libraries for $<TARGET_FILE_NAME:ccrash>...\")
         
 #         file(GET_RUNTIME_DEPENDENCIES
-#             EXECUTABLES \"\${CMAKE_INSTALL_PREFIX}/$<CONFIG>/$<TARGET_FILE_NAME:rview2>\"
-#             DIRECTORIES \"${RVIEW2_BIN_DIR}\"
+#             EXECUTABLES \"\${CMAKE_INSTALL_PREFIX}/$<CONFIG>/$<TARGET_FILE_NAME:ccrash>\"
+#             DIRECTORIES \"${ccrash_BIN_DIR}\"
 #             RESOLVED_DEPENDENCIES_VAR RESOLVED_DEPS
 #             UNRESOLVED_DEPENDENCIES_VAR UNRESOLVED_DEPS
 #             PRE_EXCLUDE_REGEXES 
