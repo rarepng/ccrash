@@ -67,7 +67,7 @@ set_source_files_properties(${PROJECT_SOURCES} PROPERTIES LANGUAGE CXX) # $&#@ u
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
-file(GLOB CUDART_DLL "${CUDA_PATH}/bin/x64/cudart64_*.dll")
+file(GLOB CUDART_DLL "${CUDA_PATH}/bin/x64/cudart64_*.dll") # idk how to adapt this for older versions
 if(NOT CUDART_DLL)
     message(FATAL_ERROR "Could not find the cudart64 dll in ${CUDA_PATH}/bin")
 endif()
